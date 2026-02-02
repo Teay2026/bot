@@ -1,0 +1,106 @@
+# ============================================
+# PYTHON
+# ============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Environnements virtuels
+venv/
+env/
+ENV/
+.venv/
+virtualenv/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ============================================
+# IDE & ÉDITEURS
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+
+# ============================================
+# DONNÉES & FICHIERS UTILISATEUR
+# ============================================
+# Inbox - NE PAS COMMITTER les fichiers sources
+inbox/*.docx
+inbox/*.pdf
+inbox/*.txt
+inbox/*.eml
+inbox/**/*
+!inbox/.gitkeep
+
+# Knowledge - NE PAS COMMITTER les résultats générés
+knowledge/**/*
+!knowledge/.gitkeep
+!knowledge/by_type/
+!knowledge/by_product/
+
+# Tests fixtures - Garder juste la structure
+tests/fixtures/**/*
+!tests/fixtures/.gitkeep
+
+# ============================================
+# LOGS & MÉTRIQUES
+# ============================================
+*.log
+*.log.*
+logs/
+metrics/
+*.db
+*.sqlite
+*.sqlite3
+
+# ============================================
+# OS
+# ============================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ============================================
+# CONFIG LOCALE
+# ============================================
+.env
+.env.local
+config.local.yaml
+secrets.yaml
+
+# ============================================
+# CACHE & TEMPORAIRES
+# ============================================
+*.tmp
+*.temp
+*.cache
+.cache/
+.pytest_cache/
+.mypy_cache/
+
+# ============================================
+# OLLAMA & LLM (si fichiers temporaires)
+# ============================================
+*.llm_cache
+ollama_cache/
+
+# ============================================
+# GIT
+# ============================================
+*.orig
+*.rej

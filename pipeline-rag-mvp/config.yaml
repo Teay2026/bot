@@ -1,0 +1,34 @@
+# Configuration de la pipeline
+llm:
+  model: "mistral:7b"
+  api_url: "http://localhost:11434/api/generate"
+  temperature: 0.3
+  max_tokens: 2000
+
+quality:
+  min_score: 0.7
+  min_chunk_words: 20
+  
+paths:
+  inbox: "./inbox"
+  knowledge: "./knowledge"
+  
+taxonomy:
+  products:
+    - "OSE"
+    - "OSM"
+    - "Orange Smart Energies"
+    - "Orange Smart Metering"
+  
+  types:
+    - "FAQ"
+    - "Procedure"
+    - "Troubleshooting"
+    - "Architecture"
+    - "Release Notes"
+  
+  audiences:
+    - "L1"
+    - "L2"
+    - "Dev"
+    - "Ops"
