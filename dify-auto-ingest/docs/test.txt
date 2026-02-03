@@ -1,0 +1,2 @@
+Ceci est un document de test pour vérifier le hook Git.
+Le hook devrait détecter ce fichier lors du commit.

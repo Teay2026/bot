@@ -1,0 +1,2 @@
+Second test document.
+Ce fichier devrait être détecté par le hook corrigé.

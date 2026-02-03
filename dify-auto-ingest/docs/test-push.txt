@@ -1,0 +1,2 @@
+Document de test pour vérifier le hook pre-push.
+Ce fichier devrait être détecté quand on fait un push.
