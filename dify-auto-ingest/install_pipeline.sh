@@ -3,17 +3,27 @@
 echo "🚀 Installation du pipeline Dify Auto-Ingest..."
 
 # 1. Installer les dépendances Python
+# On suppose qu'on est dans le dossier dify-auto-ingest ou à la racine
+# On détecte où on est
 if [ -f "scripts/requirements.txt" ]; then
+    # Exécuté depuis dify-auto-ingest/
     pip3 install -r scripts/requirements.txt
+elif [ -f "dify-auto-ingest/scripts/requirements.txt" ]; then
+    # Exécuté depuis la racine
+    pip3 install -r dify-auto-ingest/scripts/requirements.txt
 else
     pip3 install requests python-dotenv
 fi
 
 # 2. Installer le hook Git
-HOOK_PATH=".git/hooks/pre-push"
-SCRIPT_PATH=".git/hooks/install_hook_content"
+# Si exécuté depuis la racine, le hook est dans .git/hooks
+# Si exécuté depuis dify-auto-ingest, il faut remonter (../../.git/hooks) 
+# MAIS dify-auto-ingest n'est plus un repo Git, donc on est censé être dans un repo Git parent.
+# On cherche le dossier .git le plus proche
+GIT_DIR=$(git rev-parse --git-dir)
+HOOK_PATH="$GIT_DIR/hooks/pre-push"
 
-# Créer le contenu du hook si nécessaire (pour distribution)
+# Créer le contenu du hook
 cat > $HOOK_PATH << 'EOF'
 #!/bin/bash
 
@@ -29,15 +39,14 @@ remote_url="$2"
 echo "🔗 Push vers: $remote_name ($remote_url)"
 echo ""
 
-# Récupérer les fichiers ajoutés/modifiés dans docs/
-# On regarde la différence entre le SHA local et le SHA distant (ou HEAD précédent)
-# Si c'est un nouveau commit (remote_sha = 000...), on compare avec HEAD~1 ou vide
+# Récupérer les fichiers ajoutés/modifiés dans dify-auto-ingest/docs/
+# Note : Le chemin doit être relatif à la racine du repo
+DOCS_PATH="dify-auto-ingest/docs/"
+
 if [ "$remote_sha" = "0000000000000000000000000000000000000000" ]; then
-    # Nouveau commit pas encore sur remote -> diff avec le dernier commit connu localement
-    # Ou simplement lister les fichiers changés dans les commits qu'on push
-    new_files=$(git diff --name-only HEAD~1 HEAD -- docs/)
+    new_files=$(git diff --name-only HEAD~1 HEAD -- $DOCS_PATH)
 else
-    new_files=$(git diff --name-only $remote_sha $local_sha -- docs/)
+    new_files=$(git diff --name-only $remote_sha $local_sha -- $DOCS_PATH)
 fi
 
 if [ -n "$new_files" ]; then
@@ -49,10 +58,13 @@ if [ -n "$new_files" ]; then
     echo "🚀 Upload vers Dify en cours..."
     # Convertir les newlines en espaces pour passer en arguments
     files_list=$(echo "$new_files" | tr '\n' ' ')
-    python3 scripts/upload_to_dify.py $files_list
+    
+    # Trouver le script python (chemin absolu ou relatif racine)
+    # On assume que le script est lancé depuis la racine git
+    python3 dify-auto-ingest/scripts/upload_to_dify.py $files_list
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 else
-    echo "ℹ️  Aucun nouveau document dans docs/"
+    echo "ℹ️  Aucun nouveau document dans $DOCS_PATH"
 fi
 EOF
 
