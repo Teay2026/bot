@@ -59,9 +59,16 @@ if [ -n "$new_files" ]; then
     # Convertir les newlines en espaces pour passer en arguments
     files_list=$(echo "$new_files" | tr '\n' ' ')
     
+    # Détection de la commande Python (python3 ou python)
+    if command -v python3 &>/dev/null; then
+        PY_CMD="python3"
+    else
+        PY_CMD="python"
+    fi
+
     # Trouver le script python (chemin absolu ou relatif racine)
     # On assume que le script est lancé depuis la racine git
-    python3 dify-auto-ingest/scripts/upload_to_dify.py $files_list
+    $PY_CMD dify-auto-ingest/scripts/upload_to_dify.py $files_list
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 else
     echo "ℹ️  Aucun nouveau document dans $DOCS_PATH"
